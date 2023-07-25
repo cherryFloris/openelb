@@ -115,6 +115,12 @@ type EipSpec struct {
 	Interface     string `json:"interface,omitempty"`
 	Disable       bool   `json:"disable,omitempty"`
 	UsingKnownIPs bool   `json:"usingKnownIPs,omitempty"`
+	// priority for automatically assigning addresses
+	Priority int `json:"priority,omitempty"`
+	// specify the namespace for the allocation by name
+	Namespaces []string `json:"namespaces,omitempty"`
+	// specify the namespace for allocation by selector
+	NamespaceSelector map[string]string `json:"namespaceSelector,omitempty"`
 }
 
 // EipStatus defines the observed state of EIP
