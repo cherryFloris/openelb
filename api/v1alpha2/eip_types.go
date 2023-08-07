@@ -185,25 +185,18 @@ func (e Eip) Contains(ip net.IP) bool {
 		cnet.IPToBigInt(cnet.IP{IP: ip}).Cmp(big.NewInt(0).Add(cnet.IPToBigInt(cnet.IP{IP: base}), big.NewInt(size-1))) <= 0
 }
 
+func (e Eip) IsDefault() bool {
+	if e.Annotations == nil {
+		return false
+	}
+
+	return e.Annotations[constant.OpenELBEIPAnnotationDefaultPool] == "true"
+}
+
 func (e Eip) ValidateCreate() error {
 	_, _, err := e.GetSize()
 	if err != nil {
 		return err
-	}
-
-	eips := EipList{}
-	err = client.Client.List(context.Background(), &eips)
-	if err != nil {
-		return err
-	}
-	existDefaultEip := false
-	for _, eip := range eips.Items {
-		if e.IsOverlap(eip) {
-			return fmt.Errorf("eip address overlap with %s", eip.Name)
-		}
-		if validate.HasOpenELBDefaultEipAnnotation(eip.Annotations) {
-			existDefaultEip = true
-		}
 	}
 
 	if e.Spec.Protocol == constant.OpenELBProtocolLayer2 {
@@ -211,19 +204,79 @@ func (e Eip) ValidateCreate() error {
 			return fmt.Errorf("field spec.interface should not be empty")
 		}
 	}
-	if validate.HasOpenELBDefaultEipAnnotation(e.Annotations) && existDefaultEip {
-		return fmt.Errorf("already exists a default EIP")
+	return e.validate(true)
+}
+
+func (e Eip) validate(overlap bool) error {
+	eips := &EipList{}
+	if err := client.Client.List(context.Background(), eips); err != nil {
+		return err
 	}
+
+	if overlap {
+		if err := e.validateOverlap(eips); err != nil {
+			return err
+		}
+	}
+
+	return e.validateDefault(eips)
+
+}
+
+func (e Eip) validateDefault(eips *EipList) error {
+	if eips == nil {
+		return nil
+	}
+
+	if !validate.HasOpenELBDefaultEipAnnotation(e.Annotations) {
+		return nil
+	}
+
+	for _, eip := range eips.Items {
+		if eip.Name == e.Name {
+			continue
+		}
+
+		if validate.HasOpenELBDefaultEipAnnotation(eip.Annotations) {
+			return fmt.Errorf("already exists a default EIP")
+		}
+	}
+
+	return nil
+}
+
+func (e Eip) validateOverlap(eips *EipList) error {
+	if eips == nil {
+		return nil
+	}
+
+	for _, eip := range eips.Items {
+		if eip.Name == e.Name {
+			continue
+		}
+
+		if e.IsOverlap(eip) {
+			return fmt.Errorf("eip address overlap with %s", eip.Name)
+		}
+	}
+
 	return nil
 }
 
 func (e Eip) ValidateUpdate(old runtime.Object) error {
 	oldE := old.(*Eip)
-	if !reflect.DeepEqual(e.Spec, oldE.Spec) {
-		if e.Spec.Disable == oldE.Spec.Disable {
-			return fmt.Errorf("only allow modify field disable")
+	if !reflect.DeepEqual(e.Annotations, oldE.Annotations) {
+		if err := e.validate(false); err != nil {
+			return err
 		}
 	}
+
+	if !reflect.DeepEqual(e.Spec, oldE.Spec) {
+		if e.Spec.Address != oldE.Spec.Address {
+			return fmt.Errorf("the address field is not allowed to be modified")
+		}
+	}
+
 	return nil
 }
 
