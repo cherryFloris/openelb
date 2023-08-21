@@ -441,11 +441,6 @@ func (i *Manager) AssignIP(ctx context.Context, allocate *svcRecord, svc *v1.Ser
 	}
 	svc.Labels[constant.OpenELBEIPAnnotationKeyV1Alpha2] = allocate.Eip
 
-	if svc.Annotations == nil {
-		svc.Annotations = make(map[string]string)
-	}
-	svc.Annotations[constant.OpenELBProtocolAnnotationKey] = eip.GetProtocol()
-
 	//update ingress status
 	svc.Status.LoadBalancer.Ingress = make([]v1.LoadBalancerIngress, 0)
 	svc.Status.LoadBalancer.Ingress = append(svc.Status.LoadBalancer.Ingress, v1.LoadBalancerIngress{IP: addr})

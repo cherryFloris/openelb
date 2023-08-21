@@ -236,7 +236,6 @@ func TestManager_ConstructAllocate(t *testing.T) {
 				Key: "default/testsvc",
 				Eip: "eip",
 				IP:  "",
-				// Protocol: constant.OpenELBProtocolLayer2,
 			},
 		},
 
@@ -331,7 +330,6 @@ func TestManager_ConstructAllocate(t *testing.T) {
 			wantErr: false,
 			wantAllocate: &svcRecord{
 				Key: "default/testsvc",
-				// Protocol: constant.OpenELBProtocolLayer2,
 				Eip: "eip",
 				IP:  "192.168.1.50",
 			},
@@ -420,7 +418,6 @@ func TestManager_ConstructAllocate(t *testing.T) {
 			wantErr: false,
 			wantAllocate: &svcRecord{
 				Key: "default/testsvc",
-				// Protocol: constant.OpenELBProtocolLayer2,
 				Eip: "eip",
 				IP:  "192.168.1.100",
 			},
@@ -466,7 +463,6 @@ func TestManager_ConstructAllocate(t *testing.T) {
 			wantErr: false,
 			wantAllocate: &svcRecord{
 				Key: "default/testsvc",
-				// Protocol: constant.OpenELBProtocolLayer2,
 				Eip: "eip",
 				IP:  "192.168.1.100",
 			},
@@ -747,7 +743,6 @@ func TestManager_ConstructAllocate(t *testing.T) {
 			wantAllocate: &svcRecord{
 				Key: "default/testsvc",
 				Eip: "eip",
-				// Protocol: constant.OpenELBProtocolVip,
 			},
 			wantRelease: &svcRecord{
 				Key: "default/testsvc",
@@ -932,7 +927,6 @@ func TestManager_AssignIP(t *testing.T) {
 					Key: "default/svc",
 					Eip: "eip",
 					IP:  "192.168.1.100",
-					// Protocol: constant.OpenELBProtocolLayer2,
 				},
 			},
 			fields: fields{
@@ -976,7 +970,6 @@ func TestManager_AssignIP(t *testing.T) {
 				allocate: &svcRecord{
 					Key: "default/svc",
 					Eip: "eip",
-					// Protocol: constant.OpenELBProtocolLayer2,
 				},
 			},
 			fields: fields{
@@ -1018,7 +1011,6 @@ func TestManager_AssignIP(t *testing.T) {
 				allocate: &svcRecord{
 					Key: "default/svc",
 					Eip: "eip",
-					// Protocol: constant.OpenELBProtocolLayer2,
 				},
 			},
 			fields: fields{
@@ -1051,7 +1043,6 @@ func TestManager_AssignIP(t *testing.T) {
 				allocate: &svcRecord{
 					Key: "default/svc",
 					Eip: "eip",
-					// Protocol: constant.OpenELBProtocolLayer2,
 				},
 			},
 			fields: fields{
@@ -1085,7 +1076,6 @@ func TestManager_AssignIP(t *testing.T) {
 					Key: "default/svc",
 					Eip: "eip",
 					IP:  "192.168.0.100",
-					// Protocol: constant.OpenELBProtocolLayer2,
 				},
 			},
 			fields: fields{
@@ -1117,7 +1107,6 @@ func TestManager_AssignIP(t *testing.T) {
 				allocate: &svcRecord{
 					Key: "default/svc",
 					Eip: "eip",
-					// Protocol: constant.OpenELBProtocolLayer2,
 				},
 			},
 			fields: fields{
@@ -1150,7 +1139,6 @@ func TestManager_AssignIP(t *testing.T) {
 					Key: "default/svc",
 					Eip: "eip",
 					IP:  "192.168.1.100",
-					// Protocol: constant.OpenELBProtocolLayer2,
 				},
 			},
 			fields: fields{
@@ -1197,7 +1185,6 @@ func TestManager_AssignIP(t *testing.T) {
 					Key: "default/svc",
 					Eip: "eip",
 					IP:  "192.168.1.100",
-					// Protocol: constant.OpenELBProtocolLayer2,
 				},
 			},
 			fields: fields{
